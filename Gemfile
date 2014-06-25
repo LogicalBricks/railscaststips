@@ -28,6 +28,8 @@ gem 'pg_search'
 
 group :development, :test do
   gem 'rspec-rails'
+  gem 'rspec-collection_matchers'
+  gem 'rspec-activemodel-mocks'
   gem 'shoulda-matchers', require: false
   gem 'factory_girl_rails'
 

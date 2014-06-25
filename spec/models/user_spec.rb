@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe User do
   it { should have_many :treasure_votes }
@@ -11,12 +11,12 @@ describe User do
     end
 
     it 'can vote' do
-      @user.can_vote_for?(@treasure).should be_true
+      @user.can_vote_for?(@treasure).should be_truthy
     end
 
     it 'can not vote' do
       FactoryGirl.create :treasure_vote, user: @user, treasure: @treasure
-      @user.can_vote_for?(@treasure).should be_false
+      @user.can_vote_for?(@treasure).should be_falsy
     end
   end
 end

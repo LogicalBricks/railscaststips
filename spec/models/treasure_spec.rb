@@ -1,10 +1,10 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Treasure do
   it "should have a valid factory" do
     FactoryGirl.create(:treasure).should be_valid
   end
-  
+
   it { should belong_to :railscast }
   it { should validate_presence_of :description }
   it { should validate_presence_of :time }
@@ -47,7 +47,7 @@ describe Treasure do
       @treasures.should_not include(@treasure)
     end
   end
-  
+
   describe '.by_votes' do
     before :each do
       generate_treasures_with_votes
@@ -81,8 +81,8 @@ describe Treasure do
     it 'returns the most recent treasure' do
       @user = FactoryGirl.create :user
       railscast = FactoryGirl.create :railscast
-      @t1 = FactoryGirl.create :treasure, railscast: railscast, created_at: 3.days.ago 
-      @t2 = FactoryGirl.create :treasure, railscast: railscast, created_at: 2.days.ago 
+      @t1 = FactoryGirl.create :treasure, railscast: railscast, created_at: 3.days.ago
+      @t2 = FactoryGirl.create :treasure, railscast: railscast, created_at: 2.days.ago
       @t3 = FactoryGirl.create :treasure, railscast: railscast, created_at: 1.day.ago
       Treasure.most_recent.should == @t3
     end

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Railscast do
   it { should validate_presence_of :url }
@@ -44,7 +44,7 @@ describe Railscast do
 
   describe "#out_of_duration?" do
     let(:railscast) { FactoryGirl.build :railscast, duration: '12:34' }
-      
+
     it "returns true if time is after duration" do
       railscast.out_of_duration?('0:12:35'.to_time).should == true
     end

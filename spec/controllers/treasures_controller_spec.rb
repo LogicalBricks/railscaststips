@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe TreasuresController do
+describe TreasuresController, type: :controller do
 
   let(:railscast) { FactoryGirl.create :railscast }
   let(:valid_attributes) { { railscast_id: railscast.id, description: "MyText", time: '00:2:31' } }
@@ -51,37 +51,37 @@ describe TreasuresController do
 
       it 'should show 3 result for "rails"' do
         get :index, { query: "rails"}, valid_session
-        assigns(:treasures).should have(3).items
+        expect(assigns(:treasures).length).to eq(3)
       end
 
       it 'should show 4 result for "javascript"' do
         get :index, { query: "javascript"}, valid_session
-        assigns(:treasures).should have(1).items
+        expect(assigns(:treasures).length).to eq(1)
       end
 
-      it 'should show 3 result for "how to use"' do
+      it 'should show 2 result for "how to use"' do
         get :index, { query: "how to use"}, valid_session
-        assigns(:treasures).should have(2).items
+        expect(assigns(:treasures).length).to eq(2)
       end
 
       it 'should show 1 result for "coffeescript"' do
         get :index, { query: "coffeescript"}, valid_session
-        assigns(:treasures).should have(1).items
+        expect(assigns(:treasures).length).to eq(1)
       end
 
       it 'should show 2 result for "parameters"' do
         get :index, { query: "parameters"}, valid_session
-        assigns(:treasures).should have(2).items
+        expect(assigns(:treasures).length).to eq(2)
       end
 
       it 'should show 2 result for "Fixture"' do
         get :index, { query: "Fixture"}, valid_session
-        assigns(:treasures).should have(2).items
+        expect(assigns(:treasures).length).to eq(2)
       end
 
-      it 'should show 2 result for "description"' do
+      it 'should show 3 result for "description"' do
         get :index, { query: "description"}, valid_session
-        assigns(:treasures).should have(3).items
+        expect(assigns(:treasures).length).to eq(3)
       end
 
     end

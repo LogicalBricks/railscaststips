@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe RailscastsController do
+describe RailscastsController, type: :controller do
 
   let(:valid_attributes) {
     {
@@ -20,7 +20,7 @@ describe RailscastsController do
     it "assigns all railscasts as @railscasts" do
       railscast = Railscast.create! valid_attributes
       get :index, {}, valid_session
-      assigns(:railscasts).should eq([railscast])
+      expect(assigns(:railscasts)).to eq([railscast])
     end
   end
 
@@ -69,10 +69,9 @@ describe RailscastsController do
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved railscast as @railscast" do
-        # Trigger the behavior that occurs when invalid params are submitted
         Railscast.any_instance.stub(:save).and_return(false)
         post :create, {:railscast => { "url" => "invalid value" }}, valid_session
-        assigns(:railscast).should be_a_new(Railscast)
+        expect(assigns(:railscast)).to be_instance_of(Railscast)
       end
 
       it "re-renders the 'new' template" do

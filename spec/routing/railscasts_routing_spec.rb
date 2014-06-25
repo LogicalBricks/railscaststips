@@ -1,4 +1,4 @@
-require "spec_helper"
+require 'rails_helper'
 
 describe RailscastsController do
   describe "routing" do

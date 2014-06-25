@@ -1,5 +1,5 @@
 class TreasureSearch
-  attr_reader :result, :type, :search_term, :failed_search_term 
+  attr_reader :result, :type, :search_term, :failed_search_term
 
   def initialize(params)
     @result = load_treasures params
