@@ -10,7 +10,8 @@ class HomeController < ApplicationController
   end
 
   def tweets
-    @tweets = Twitter.search("from:railscaststips", count: 2, result_type: "recent").results
+    client = get_twitter_client
+    @tweets = client.search("from:railscaststips", count: 2, result_type: "recent").results
     render json: @tweets[0..1]
   end
 end

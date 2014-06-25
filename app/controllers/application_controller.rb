@@ -18,4 +18,13 @@ class ApplicationController < ActionController::Base
   def current_user
     @current_user ||= User.find(session[:user_id]) if session[:user_id]
   end
+
+  def get_twitter_client
+    Twitter::REST::Client.new do |config|
+      config.consumer_key       = TWITTER_CONFIG['consumer_key']
+      config.consumer_secret    = TWITTER_CONFIG['consumer_secret']
+      config.oauth_token        = TWITTER_CONFIG['oauth_token']
+      config.oauth_token_secret = TWITTER_CONFIG['oauth_token_secret']
+    end
+  end
 end
