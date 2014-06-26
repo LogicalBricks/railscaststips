@@ -1,55 +1,37 @@
-require 'bundler/capistrano'
+# config valid only for Capistrano 3.1
+lock '3.2.1'
 
-server '173.255.215.72', :web, :app, :db, primary: true
+set :application, 'railscaststips'
+set :scm, "git"
+set :repo_url, "git@github.com:LogicalBricks/railscaststips.git"
+set :deploy_to, "/home/deployer/apps/#{fetch(:application)}"
 
-set :application, 'railsrumble'
-set :user, 'deployer'
-set :deploy_to, "/home/#{user}/apps/#{application}"
-set :deploy_via, :remote_cache
-set :use_sudo, false
+set :ssh_options, {
+  forward_agent: true
+}
 
-set :scm, 'git'
-set :repository,'git@github.com:railsrumble/r13-team-376.git'
-set :branch, 'master'
+set :log_level, :debug
+set :linked_files, %w{config/database.yml config/secrets.yml config/github.yml config/twitter.yml}
+set :linked_dirs, %w{bin log tmp vendor/bundle public/system public/uploads}
 
-default_run_options[:pty] = true
-ssh_options[:forward_agent] = true
-
-after 'deploy', 'deploy:cleanup' # keep only the last 5 releases
+SSHKit.config.command_map[:rake]  = "bundle exec rake"
+SSHKit.config.command_map[:rails] = "bundle exec rails"
 
 namespace :deploy do
-  %w[start stop restart].each do |command|
-    desc "#{command} unicorn server"
-    task command, roles: :app, except: {no_release: true} do
-      run "/etc/init.d/unicorn_#{application} #{command}"
+
+  desc 'Restart application'
+  task :restart do
+    on roles(:app), in: :sequence, wait: 5 do
+      execute :touch, release_path.join('tmp/restart.txt')
     end
   end
 
-  task :setup_config, roles: :app do
-    sudo "ln -nfs #{current_path}/config/nginx.conf /etc/nginx/sites-enabled/#{application}"
-    sudo "ln -nfs #{current_path}/config/unicorn_init.sh /etc/init.d/unicorn_#{application}"
-    run "mkdir -p #{shared_path}/config"
-    put File.read("config/database.yml.template"), "#{shared_path}/config/database.yml"
-    put File.read("config/github.yml.template"), "#{shared_path}/config/github.yml"
-    put File.read("config/twitter.yml.template"), "#{shared_path}/config/twitter.yml"
-    puts "Now edit the config files in #{shared_path}."
-  end
-  after "deploy:setup", "deploy:setup_config"
+  after :publishing, :restart
 
-  task :symlink_config, roles: :app do
-    run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
-    run "ln -nfs #{shared_path}/config/github.yml #{release_path}/config/github.yml"
-    run "ln -nfs #{shared_path}/config/twitter.yml #{release_path}/config/twitter.yml"
-  end
-  after "deploy:finalize_update", "deploy:symlink_config"
-
-  desc "Make sure local git is in sync with remote."
-  task :check_revision, roles: :web do
-    unless `git rev-parse HEAD` == `git rev-parse origin/master`
-      puts "WARNING: HEAD is not the same as origin/master"
-      puts "Run `git push` to sync changes."
-      exit
+  after :restart, :clear_cache do
+    on roles(:web), in: :groups, limit: 3, wait: 10 do
     end
   end
-  before "deploy", "deploy:check_revision"
+
+  after :finishing, 'deploy:cleanup'
 end
