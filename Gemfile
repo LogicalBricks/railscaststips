@@ -23,7 +23,11 @@ gem 'font-awesome-rails'
 gem 'twitter'
 
 gem 'unicorn'
-gem 'capistrano', group: :development
+group :development do
+  gem 'capistrano'
+  gem 'capistrano-bundler'
+  gem 'capistrano-rails'
+end
 gem 'pg_search'
 
 group :development, :test do
