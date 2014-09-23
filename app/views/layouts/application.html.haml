@@ -34,19 +34,11 @@
                   %ul.dropdown-menu
                     - if current_user
                       %li= link_to "Hi #{current_user.username}!", "https://github.com/#{current_user.username}"
-                      - if current_user.guest?
-                        %li
-                          = link_to "/auth/github" do
-                            %i.icon-github
-                            Github
                       %li= link_to 'Logout', signout_path
-                    - else
-                      %li
-                        = link_to 'Try it!', tryit_path
-                      %li
-                        = link_to "/auth/github" do
-                          %i.icon-github
-                          Github
+                    %li
+                      = link_to "/auth/github" do
+                        %i.icon-github
+                        Github
     - if notice or alert
       - if notice
         .container

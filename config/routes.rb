@@ -15,7 +15,6 @@ R13Team376::Application.routes.draw do
   get "/tweets" => "home#tweets"
 
   get "auth/:provider/callback" => "sessions#create"
-  get "tryit" => "sessions#create", as: :tryit
   get 'auth/failure', to: redirect('/')
   get "signout" => "sessions#destroy", as: :signout
 end
